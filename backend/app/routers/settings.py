@@ -3,7 +3,7 @@ import csv
 import io
 import datetime
 from decimal import Decimal
-from typing import Dict, Any
+from typing import Dict, Any, Optional, List
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Response
 from sqlalchemy.orm import Session
 
