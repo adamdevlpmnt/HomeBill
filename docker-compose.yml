@@ -1,0 +1,51 @@
+services:
+  app:
+    image: ghcr.io/adamdevlpmnt/homebill:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: conso-maison-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - TZ=Africa/Algiers
+      - APP_PASSWORD=${APP_PASSWORD:-admin123}
+      - SECRET_KEY=${SECRET_KEY:-change-this-secret-key-in-production-random-token}
+      - DATA_DIR=/data
+      - SEED_DEMO=${SEED_DEMO:-false}
+    volumes:
+      - data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # Profil optionnel avec Caddy pour HTTPS automatique (pour PWA iOS)
+  # Lancement : docker compose --profile with-caddy up -d
+  caddy:
+    image: caddy:2-alpine
+    container_name: conso-maison-caddy
+    restart: unless-stopped
+    profiles:
+      - with-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+
+volumes:
+  data:
+    name: conso_maison_data
+  caddy_data:
+  caddy_config:

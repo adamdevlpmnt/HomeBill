@@ -1,0 +1,15 @@
+.git
+.github
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+venv
+.venv
+node_modules
+frontend/node_modules
+data/
+*.db
+*.db-wal
+*.db-shm

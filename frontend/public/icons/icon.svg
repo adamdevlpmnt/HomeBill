@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="112" fill="#0B1020"/>
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="#131A2E" stroke="#27325A" stroke-width="8"/>
+  
+  <!-- Electricity (Yellow Zap) -->
+  <path d="M246 96 L144 266 L230 266 L210 416 L332 236 L246 236 Z" fill="#FACC15"/>
+  
+  <!-- Gas Flame (Orange) -->
+  <path d="M330 190 C330 190 380 240 380 300 C380 355 335 390 290 390 C350 350 350 280 330 250 C320 280 290 310 290 340 C270 310 280 260 330 190 Z" fill="#FF7A45" opacity="0.9"/>
+  
+  <!-- Water Drop (Sky Blue) -->
+  <path d="M180 220 C180 220 220 280 220 320 C220 350 195 375 165 375 C135 375 110 350 110 320 C110 280 150 220 180 220 Z" fill="#38BDF8" opacity="0.9"/>
+</svg>

@@ -1,0 +1,2367 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Conso Maison",
+    "description": "API de suivi de consommation d'électricité, de gaz et d'eau avec estimation de factures",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "description": "Vérification du mot de passe unique et création de la session.",
+        "operationId": "login_api_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logout",
+        "description": "Déconnexion et invalidation du cookie.",
+        "operationId": "logout_api_auth_logout_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/status": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get Status",
+        "description": "Vérifie si la session actuelle est valide.",
+        "operationId": "get_status_api_auth_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/meters": {
+      "get": {
+        "tags": [
+          "meters"
+        ],
+        "summary": "Get Meters",
+        "description": "Liste tous les compteurs avec leur dernier index et date.",
+        "operationId": "get_meters_api_meters_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MeterResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Get Meters Api Meters Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "meters"
+        ],
+        "summary": "Create Meter",
+        "description": "Crée un compteur.",
+        "operationId": "create_meter_api_meters_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeterCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeterResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/readings/preview": {
+      "post": {
+        "tags": [
+          "readings"
+        ],
+        "summary": "Preview Reading",
+        "description": "Prévisualisation instantanée pendant la frappe d'un index :\ncalcule la consommation implicite, le coût approximatif et détecte les anomalies.",
+        "operationId": "preview_reading_api_readings_preview_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReadingPreviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadingPreviewResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/readings/bulk": {
+      "post": {
+        "tags": [
+          "readings"
+        ],
+        "summary": "Create Bulk Readings",
+        "description": "Saisie groupée des index (ex: les 3 compteurs relevés le vendredi).\nExécute les validations et enregistre en une transaction atomique.",
+        "operationId": "create_bulk_readings_api_readings_bulk_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkReadingCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ReadingResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Create Bulk Readings Api Readings Bulk Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/readings": {
+      "get": {
+        "tags": [
+          "readings"
+        ],
+        "summary": "Get Readings",
+        "description": "Récupère l'historique des relevés (du plus récent au plus ancien).",
+        "operationId": "get_readings_api_readings_get",
+        "parameters": [
+          {
+            "name": "meter_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Meter Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReadingResponse"
+                  },
+                  "title": "Response Get Readings Api Readings Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/readings/{reading_id}": {
+      "put": {
+        "tags": [
+          "readings"
+        ],
+        "summary": "Update Reading",
+        "description": "Modifie un relevé existant.",
+        "operationId": "update_reading_api_readings__reading_id__put",
+        "parameters": [
+          {
+            "name": "reading_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Reading Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReadingUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadingResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "readings"
+        ],
+        "summary": "Delete Reading",
+        "description": "Supprime un relevé.",
+        "operationId": "delete_reading_api_readings__reading_id__delete",
+        "parameters": [
+          {
+            "name": "reading_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Reading Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events": {
+      "get": {
+        "tags": [
+          "events"
+        ],
+        "summary": "Get Events",
+        "description": "Liste des événements compteurs (remplacements).",
+        "operationId": "get_events_api_events_get",
+        "parameters": [
+          {
+            "name": "meter_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Meter Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeterEventResponse"
+                  },
+                  "title": "Response Get Events Api Events Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "events"
+        ],
+        "summary": "Create Event",
+        "description": "Enregistre un événement de remplacement ou réinitialisation d'un compteur.",
+        "operationId": "create_event_api_events_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeterEventCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeterEventResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/events/{event_id}": {
+      "delete": {
+        "tags": [
+          "events"
+        ],
+        "summary": "Delete Event",
+        "description": "Supprime un événement.",
+        "operationId": "delete_event_api_events__event_id__delete",
+        "parameters": [
+          {
+            "name": "event_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Event Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tariffs/current": {
+      "get": {
+        "tags": [
+          "tariffs"
+        ],
+        "summary": "Get Current Tariffs",
+        "description": "Retourne la configuration actuelle des tarifs (config/tarifs.json).",
+        "operationId": "get_current_tariffs_api_tariffs_current_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Current Tariffs Api Tariffs Current Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "tariffs"
+        ],
+        "summary": "Update Current Tariffs",
+        "description": "Met à jour le fichier config/tarifs.json.",
+        "operationId": "update_current_tariffs_api_tariffs_current_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "type": "object",
+                "title": "Payload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tariffs/versions": {
+      "get": {
+        "tags": [
+          "tariffs"
+        ],
+        "summary": "Get Tariff Versions",
+        "description": "Historique des versions de tarifs stockées en base.",
+        "operationId": "get_tariff_versions_api_tariffs_versions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TariffVersionResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Get Tariff Versions Api Tariffs Versions Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tariffs"
+        ],
+        "summary": "Create Tariff Version",
+        "description": "Enregistre une nouvelle version tarifaire en base.",
+        "operationId": "create_tariff_version_api_tariffs_versions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TariffVersionCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TariffVersionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cycles": {
+      "get": {
+        "tags": [
+          "cycles"
+        ],
+        "summary": "Get Cycles",
+        "description": "Liste tous les cycles de facturation.",
+        "operationId": "get_cycles_api_cycles_get",
+        "parameters": [
+          {
+            "name": "energy_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Energy Group"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BillingCycleResponse"
+                  },
+                  "title": "Response Get Cycles Api Cycles Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cycles"
+        ],
+        "summary": "Create Cycle",
+        "description": "Crée un nouveau cycle de facturation trimestriel.",
+        "operationId": "create_cycle_api_cycles_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BillingCycleCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingCycleResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/invoices": {
+      "get": {
+        "tags": [
+          "invoices"
+        ],
+        "summary": "Get Invoices",
+        "description": "Liste des factures réelles enregistrées.",
+        "operationId": "get_invoices_api_invoices_get",
+        "parameters": [
+          {
+            "name": "energy_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Energy Group"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InvoiceResponse"
+                  },
+                  "title": "Response Get Invoices Api Invoices Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "invoices"
+        ],
+        "summary": "Create Invoice",
+        "description": "Enregistre une vraie facture reçue et calcule l'écart avec l'estimation.",
+        "operationId": "create_invoice_api_invoices_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvoiceCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/invoices/{invoice_id}": {
+      "delete": {
+        "tags": [
+          "invoices"
+        ],
+        "summary": "Delete Invoice",
+        "description": "Supprime une facture enregistrée.",
+        "operationId": "delete_invoice_api_invoices__invoice_id__delete",
+        "parameters": [
+          {
+            "name": "invoice_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Invoice Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/timeseries": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Timeseries Analytics",
+        "description": "Retourne les consommations agrégées par période (semaine ISO, mois, trimestre, année)\navec interpolation journalière linéaire.",
+        "operationId": "get_timeseries_analytics_api_analytics_timeseries_get",
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(week|month|quarter|year)$",
+              "default": "week",
+              "title": "Period"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "title": "Response Get Timeseries Analytics Api Analytics Timeseries Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/analytics/sparklines": {
+      "get": {
+        "tags": [
+          "analytics"
+        ],
+        "summary": "Get Sparklines",
+        "description": "Retourne les 12 dernières semaines de consommation pour chaque énergie (mini-courbes d'accueil)\navec pourcentage de variation par rapport aux 12 semaines précédentes.",
+        "operationId": "get_sparklines_api_analytics_sparklines_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Sparklines Api Analytics Sparklines Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/billing/estimate": {
+      "get": {
+        "tags": [
+          "billing"
+        ],
+        "summary": "Get Billing Estimate",
+        "description": "Retourne l'estimation détaillée de la facture du trimestre en cours :\n- Sonelgaz (facture conjointe Électricité + Gaz) avec décomposition par palier et scénarios bas/central/haut\n- SEAAL (Eau & Assainissement) avec décomposition et scénarios\n- Comparaison aux budgets cibles et indice de confiance.",
+        "operationId": "get_billing_estimate_api_billing_estimate_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Billing Estimate Api Billing Estimate Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settings": {
+      "get": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Get Settings",
+        "description": "Récupère les paramètres de l'application.",
+        "operationId": "get_settings_api_settings_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsDict-Output"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Update Settings",
+        "description": "Met à jour les paramètres de l'application.",
+        "operationId": "update_settings_api_settings_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsDict-Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsDict-Output"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settings/export/json": {
+      "get": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Export Database Json",
+        "description": "Exporte l'ensemble des données au format JSON.",
+        "operationId": "export_database_json_api_settings_export_json_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settings/import/json": {
+      "post": {
+        "tags": [
+          "settings"
+        ],
+        "summary": "Import Database Json",
+        "description": "Importe des données à partir d'un fichier JSON.",
+        "operationId": "import_database_json_api_settings_import_json_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_import_database_json_api_settings_import_json_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Healthcheck",
+        "description": "Healthcheck pour Docker et monitoring.",
+        "operationId": "healthcheck_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AuthStatusResponse": {
+        "properties": {
+          "authenticated": {
+            "type": "boolean",
+            "title": "Authenticated"
+          },
+          "app_name": {
+            "type": "string",
+            "title": "App Name"
+          },
+          "currency_code": {
+            "type": "string",
+            "title": "Currency Code"
+          },
+          "currency_symbol": {
+            "type": "string",
+            "title": "Currency Symbol"
+          }
+        },
+        "type": "object",
+        "required": [
+          "authenticated",
+          "app_name",
+          "currency_code",
+          "currency_symbol"
+        ],
+        "title": "AuthStatusResponse"
+      },
+      "BillingCycleCreate": {
+        "properties": {
+          "cycle_code": {
+            "type": "string",
+            "title": "Cycle Code"
+          },
+          "energy_group": {
+            "type": "string",
+            "title": "Energy Group"
+          },
+          "quarter": {
+            "type": "integer",
+            "title": "Quarter"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "is_closed": {
+            "type": "boolean",
+            "title": "Is Closed",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "cycle_code",
+          "energy_group",
+          "quarter",
+          "year",
+          "start_date",
+          "end_date"
+        ],
+        "title": "BillingCycleCreate"
+      },
+      "BillingCycleResponse": {
+        "properties": {
+          "cycle_code": {
+            "type": "string",
+            "title": "Cycle Code"
+          },
+          "energy_group": {
+            "type": "string",
+            "title": "Energy Group"
+          },
+          "quarter": {
+            "type": "integer",
+            "title": "Quarter"
+          },
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "is_closed": {
+            "type": "boolean",
+            "title": "Is Closed",
+            "default": false
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cycle_code",
+          "energy_group",
+          "quarter",
+          "year",
+          "start_date",
+          "end_date",
+          "id"
+        ],
+        "title": "BillingCycleResponse"
+      },
+      "Body_import_database_json_api_settings_import_json_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_import_database_json_api_settings_import_json_post"
+      },
+      "BulkReadingCreate": {
+        "properties": {
+          "read_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Read At"
+          },
+          "readings": {
+            "items": {
+              "$ref": "#/components/schemas/BulkReadingItem"
+            },
+            "type": "array",
+            "title": "Readings"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "read_at",
+          "readings"
+        ],
+        "title": "BulkReadingCreate"
+      },
+      "BulkReadingItem": {
+        "properties": {
+          "meter_id": {
+            "type": "integer",
+            "title": "Meter Id"
+          },
+          "index_value": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Index Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "index_value"
+        ],
+        "title": "BulkReadingItem"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InvoiceCreate": {
+        "properties": {
+          "energy_group": {
+            "type": "string",
+            "title": "Energy Group"
+          },
+          "cycle_code": {
+            "type": "string",
+            "title": "Cycle Code"
+          },
+          "invoice_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invoice Number"
+          },
+          "invoice_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invoice Date"
+          },
+          "electricity_billed_kwh": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Electricity Billed Kwh"
+          },
+          "gas_billed_th": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gas Billed Th"
+          },
+          "water_billed_m3": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Water Billed M3"
+          },
+          "actual_amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Actual Amount"
+          },
+          "estimated_amount": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Amount"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "energy_group",
+          "cycle_code",
+          "actual_amount"
+        ],
+        "title": "InvoiceCreate"
+      },
+      "InvoiceResponse": {
+        "properties": {
+          "energy_group": {
+            "type": "string",
+            "title": "Energy Group"
+          },
+          "cycle_code": {
+            "type": "string",
+            "title": "Cycle Code"
+          },
+          "invoice_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invoice Number"
+          },
+          "invoice_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Invoice Date"
+          },
+          "electricity_billed_kwh": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Electricity Billed Kwh"
+          },
+          "gas_billed_th": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gas Billed Th"
+          },
+          "water_billed_m3": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Water Billed M3"
+          },
+          "actual_amount": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Actual Amount"
+          },
+          "estimated_amount": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Amount"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "billing_cycle_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Billing Cycle Id"
+          },
+          "variance_amount": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variance Amount"
+          },
+          "variance_pct": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variance Pct"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "energy_group",
+          "cycle_code",
+          "actual_amount",
+          "id",
+          "created_at"
+        ],
+        "title": "InvoiceResponse"
+      },
+      "LoginRequest": {
+        "properties": {
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "MeterCreate": {
+        "properties": {
+          "meter_type": {
+            "type": "string",
+            "title": "Meter Type"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "meter_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meter Number"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_type",
+          "name",
+          "unit"
+        ],
+        "title": "MeterCreate"
+      },
+      "MeterEventCreate": {
+        "properties": {
+          "meter_id": {
+            "type": "integer",
+            "title": "Meter Id"
+          },
+          "event_type": {
+            "type": "string",
+            "title": "Event Type"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Event Date"
+          },
+          "old_index_end": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Old Index End"
+          },
+          "new_index_start": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "New Index Start",
+            "default": "0.000"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "event_type",
+          "event_date",
+          "old_index_end"
+        ],
+        "title": "MeterEventCreate"
+      },
+      "MeterEventResponse": {
+        "properties": {
+          "meter_id": {
+            "type": "integer",
+            "title": "Meter Id"
+          },
+          "event_type": {
+            "type": "string",
+            "title": "Event Type"
+          },
+          "event_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Event Date"
+          },
+          "old_index_end": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Old Index End"
+          },
+          "new_index_start": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "New Index Start",
+            "default": "0.000"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "event_type",
+          "event_date",
+          "old_index_end",
+          "id",
+          "created_at"
+        ],
+        "title": "MeterEventResponse"
+      },
+      "MeterResponse": {
+        "properties": {
+          "meter_type": {
+            "type": "string",
+            "title": "Meter Type"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "meter_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meter Number"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active",
+            "default": true
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "last_reading_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Reading Date"
+          },
+          "last_index_value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Index Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_type",
+          "name",
+          "unit",
+          "id"
+        ],
+        "title": "MeterResponse"
+      },
+      "ReadingPreviewRequest": {
+        "properties": {
+          "meter_id": {
+            "type": "integer",
+            "title": "Meter Id"
+          },
+          "read_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Read At"
+          },
+          "index_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Index Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "read_at",
+          "index_value"
+        ],
+        "title": "ReadingPreviewRequest"
+      },
+      "ReadingPreviewResponse": {
+        "properties": {
+          "meter_id": {
+            "type": "integer",
+            "title": "Meter Id"
+          },
+          "meter_type": {
+            "type": "string",
+            "title": "Meter Type"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "previous_index": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous Index"
+          },
+          "previous_read_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous Read At"
+          },
+          "consumption": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Consumption"
+          },
+          "days_count": {
+            "type": "integer",
+            "title": "Days Count"
+          },
+          "daily_rate": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Daily Rate"
+          },
+          "estimated_incremental_cost": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Estimated Incremental Cost"
+          },
+          "is_anomaly": {
+            "type": "boolean",
+            "title": "Is Anomaly",
+            "default": false
+          },
+          "warning_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "meter_type",
+          "unit",
+          "consumption",
+          "days_count",
+          "daily_rate",
+          "estimated_incremental_cost"
+        ],
+        "title": "ReadingPreviewResponse"
+      },
+      "ReadingResponse": {
+        "properties": {
+          "meter_id": {
+            "type": "integer",
+            "title": "Meter Id"
+          },
+          "read_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Read At"
+          },
+          "index_value": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Index Value"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "meter_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Meter Type"
+          },
+          "consumption_since_previous": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consumption Since Previous"
+          },
+          "days_since_previous": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Days Since Previous"
+          },
+          "daily_rate": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Daily Rate"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_id",
+          "read_at",
+          "index_value",
+          "id",
+          "created_at"
+        ],
+        "title": "ReadingResponse"
+      },
+      "ReadingUpdate": {
+        "properties": {
+          "index_value": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0.0
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Index Value"
+          },
+          "read_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Read At"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "title": "ReadingUpdate"
+      },
+      "SettingsDict-Input": {
+        "properties": {
+          "budget_electricity_quarterly": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Budget Electricity Quarterly",
+            "default": "3500.00"
+          },
+          "budget_gas_quarterly": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Budget Gas Quarterly",
+            "default": "3000.00"
+          },
+          "budget_sonelgaz_quarterly": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Budget Sonelgaz Quarterly",
+            "default": "7000.00"
+          },
+          "budget_water_quarterly": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Budget Water Quarterly",
+            "default": "600.00"
+          },
+          "reading_day_of_week": {
+            "type": "integer",
+            "title": "Reading Day Of Week",
+            "default": 4
+          },
+          "theme": {
+            "type": "string",
+            "title": "Theme",
+            "default": "auto"
+          },
+          "pcs_factor_gas": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+              }
+            ],
+            "title": "Pcs Factor Gas",
+            "default": "9.7"
+          }
+        },
+        "type": "object",
+        "title": "SettingsDict"
+      },
+      "SettingsDict-Output": {
+        "properties": {
+          "budget_electricity_quarterly": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Budget Electricity Quarterly",
+            "default": "3500.00"
+          },
+          "budget_gas_quarterly": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Budget Gas Quarterly",
+            "default": "3000.00"
+          },
+          "budget_sonelgaz_quarterly": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Budget Sonelgaz Quarterly",
+            "default": "7000.00"
+          },
+          "budget_water_quarterly": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Budget Water Quarterly",
+            "default": "600.00"
+          },
+          "reading_day_of_week": {
+            "type": "integer",
+            "title": "Reading Day Of Week",
+            "default": 4
+          },
+          "theme": {
+            "type": "string",
+            "title": "Theme",
+            "default": "auto"
+          },
+          "pcs_factor_gas": {
+            "type": "string",
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Pcs Factor Gas",
+            "default": "9.7"
+          }
+        },
+        "type": "object",
+        "title": "SettingsDict"
+      },
+      "TariffVersionCreate": {
+        "properties": {
+          "meter_type": {
+            "type": "string",
+            "title": "Meter Type"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date",
+            "title": "Valid From"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "facture"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_type",
+          "valid_from",
+          "parameters"
+        ],
+        "title": "TariffVersionCreate"
+      },
+      "TariffVersionResponse": {
+        "properties": {
+          "meter_type": {
+            "type": "string",
+            "title": "Meter Type"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date",
+            "title": "Valid From"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": "facture"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter_type",
+          "valid_from",
+          "parameters",
+          "id",
+          "created_at"
+        ],
+        "title": "TariffVersionResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

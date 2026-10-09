@@ -1,0 +1,222 @@
+{
+  "$schema": "./tarifs.schema.json",
+  "version": "2026.1",
+  "currency": {
+    "code": "DZD",
+    "symbol": "DA",
+    "decimals": 2
+  },
+  "billing_cycle_standard_days": 90,
+  "prorate_brackets_by_days": false,
+  "electricity": {
+    "code": "54M",
+    "name": "Basse Tension Résidentiel",
+    "meter_unit": "kWh",
+    "billed_unit": "kWh",
+    "pmd_kw": 6.0,
+    "fixed_fee_trimestrial": "78.66",
+    "brackets": [
+      {
+        "index": 1,
+        "name": "Tranche 1",
+        "min_qty": "0",
+        "max_qty": "125",
+        "unit_price": "1.7787",
+        "vat_rate": "0.09"
+      },
+      {
+        "index": 2,
+        "name": "Tranche 2",
+        "min_qty": "125",
+        "max_qty": "250",
+        "unit_price": "4.1789",
+        "vat_rate": "0.09"
+      },
+      {
+        "index": 3,
+        "name": "Tranche 3",
+        "min_qty": "250",
+        "max_qty": "1000",
+        "unit_price": "4.8120",
+        "vat_rate": "0.19"
+      },
+      {
+        "index": 4,
+        "name": "Tranche 4",
+        "min_qty": "1000",
+        "max_qty": null,
+        "unit_price": "5.4800",
+        "vat_rate": "0.19"
+      }
+    ],
+    "fixed_taxes": [
+      {
+        "code": "DROIT_FIXE_ELEC",
+        "name": "Droit Fixe sur consommation",
+        "amount": "100.00"
+      },
+      {
+        "code": "TAXE_HABITATION_ELEC",
+        "name": "Taxe d'habitation",
+        "amount": "100.00"
+      }
+    ]
+  },
+  "gas": {
+    "code": "23M",
+    "name": "Basse Pression Résidentiel",
+    "meter_unit": "m3",
+    "billed_unit": "Th",
+    "pcs_factor": "9.7",
+    "fixed_fee_trimestrial": "85.50",
+    "brackets": [
+      {
+        "index": 1,
+        "name": "Tranche 1",
+        "min_qty": "0",
+        "max_qty": "1125",
+        "unit_price": "0.1682",
+        "vat_rate": "0.09"
+      },
+      {
+        "index": 2,
+        "name": "Tranche 2",
+        "min_qty": "1125",
+        "max_qty": "2500",
+        "unit_price": "0.3245",
+        "vat_rate": "0.09"
+      },
+      {
+        "index": 3,
+        "name": "Tranche 3",
+        "min_qty": "2500",
+        "max_qty": "7500",
+        "unit_price": "0.4025",
+        "vat_rate": "0.19"
+      },
+      {
+        "index": 4,
+        "name": "Tranche 4",
+        "min_qty": "7500",
+        "max_qty": null,
+        "unit_price": "0.4599",
+        "vat_rate": "0.19"
+      }
+    ],
+    "fixed_taxes": [
+      {
+        "code": "DROIT_FIXE_GAZ",
+        "name": "Droit Fixe sur consommation",
+        "amount": "100.00"
+      },
+      {
+        "code": "TAXE_HABITATION_GAZ",
+        "name": "Taxe d'habitation",
+        "amount": "100.00"
+      }
+    ]
+  },
+  "energy_joint_sonelgaz": {
+    "note": "Facturation conjointe Sonelgaz électricité + gaz",
+    "fixed_fee_total": "164.16",
+    "fixed_fee_vat_rate": "0.09",
+    "fixed_duty_total": "200.00",
+    "housing_tax_total": "200.00",
+    "cash_duty_stamp": "70.00"
+  },
+  "water": {
+    "code": "SEAAL_RESIDENTIEL",
+    "name": "Tarif Résidentiel SEAAL (Alger)",
+    "meter_unit": "m3",
+    "billed_unit": "m3",
+    "cash_duty_stamp": "6.00",
+    "potable_water": {
+      "fixed_fee_trimestrial": "240.00",
+      "vat_rate": "0.09",
+      "brackets": [
+        {
+          "index": 1,
+          "name": "Tranche 1",
+          "min_qty": "0",
+          "max_qty": "25",
+          "unit_price": "6.30"
+        },
+        {
+          "index": 2,
+          "name": "Tranche 2",
+          "min_qty": "25",
+          "max_qty": "55",
+          "unit_price": "20.48"
+        },
+        {
+          "index": 3,
+          "name": "Tranche 3",
+          "min_qty": "55",
+          "max_qty": "82",
+          "unit_price": "34.65"
+        },
+        {
+          "index": 4,
+          "name": "Tranche 4",
+          "min_qty": "82",
+          "max_qty": null,
+          "unit_price": "40.95"
+        }
+      ]
+    },
+    "sanitation": {
+      "fixed_fee_trimestrial": "60.00",
+      "vat_rate": "0.09",
+      "brackets": [
+        {
+          "index": 1,
+          "name": "Tranche 1",
+          "min_qty": "0",
+          "max_qty": "25",
+          "unit_price": "2.35"
+        },
+        {
+          "index": 2,
+          "name": "Tranche 2",
+          "min_qty": "25",
+          "max_qty": "55",
+          "unit_price": "7.64"
+        },
+        {
+          "index": 3,
+          "name": "Tranche 3",
+          "min_qty": "55",
+          "max_qty": "82",
+          "unit_price": "12.93"
+        },
+        {
+          "index": 4,
+          "name": "Tranche 4",
+          "min_qty": "82",
+          "max_qty": null,
+          "unit_price": "15.28"
+        }
+      ]
+    },
+    "fees_and_taxes": [
+      {
+        "code": "MF",
+        "name": "Redevance d'assainissement / gestion (إتاوة التسيير)",
+        "basis_type": "volume_m3",
+        "rate_per_unit": "3.00"
+      },
+      {
+        "code": "WQF",
+        "name": "Redevance qualité de l'eau (إتاوة نوعية الماء)",
+        "basis_type": "potable_water_consumption_amount",
+        "rate_percentage": "0.04"
+      },
+      {
+        "code": "WSF",
+        "name": "Redevance économie d'eau (إتاوة إقتصاد الماء)",
+        "basis_type": "potable_water_consumption_amount",
+        "rate_percentage": "0.04"
+      }
+    ]
+  }
+}

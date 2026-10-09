@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Mode clair par défaut si light sélectionné */
+  --color-bg: #F4F6FB;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #EEF1F8;
+  --color-border: #DDE3F0;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #5B6684;
+  --color-elec: #CA9A04;
+  --color-gas: #E2571F;
+  --color-water: #0A8FCB;
+  --color-success: #12A06E;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+}
+
+/* Dark-first : appliqué quand html a la classe dark ou par défaut */
+html.dark, :root:not(.light) {
+  --color-bg: #0B1020;
+  --color-surface: #131A2E;
+  --color-surface-elevated: #1B2440;
+  --color-border: #27325A;
+  --color-text-primary: #E8ECF8;
+  --color-text-secondary: #8A94B8;
+  --color-elec: #FACC15;
+  --color-gas: #FF7A45;
+  --color-water: #38BDF8;
+  --color-success: #34D399;
+  --color-warning: #FBBF24;
+  --color-danger: #F87171;
+}
+
+html, body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "SF Pro Display", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Permettre la sélection et la saisie normale dans les inputs */
+input, textarea {
+  user-select: text;
+  -webkit-user-select: text;
+  font-size: 16px !important; /* Évite le zoom automatique iOS Safari */
+}
+
+/* Chiffres tabulaires sur tous les nombres financiers et index */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Barre de défilement discrète */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+/* Effet verre dépoli iOS pour la barre d'onglets */
+.glass-panel {
+  background-color: rgba(19, 26, 46, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+html:not(.dark) .glass-panel {
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+/* Zone tactile minimale iOS de 44px */
+.tap-target-44 {
+  min-height: 44px;
+  min-width: 44px;
+}
